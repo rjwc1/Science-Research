@@ -17,6 +17,9 @@
 #
 #  You will also need to connect the - sides of the output
 #  LED through a 330 Ohm resistor to ground.
+#
+# Note: must have pigpio installed
+# http://abyz.me.uk/rpi/pigpio/index.html
 
 import RPi.GPIO as GPIO
 import pigpio
