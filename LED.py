@@ -3,8 +3,8 @@
 # Date: February 11, 2018
 #
 # Description:
-#  Demonstration of how to use an LED as a light sensors. Cover
-#  up the LED plugged into pin 20/21 to light up the output LED
+#  Demonstration of how to use an LED as a light sensors. Shine
+#  light on LED plugged into pin 20/21 to light up the output LED
 #  plugged into pin 18. Note that you might have to change the
 #  THRESHOLD parameter.
 #
@@ -19,23 +19,20 @@
 #  LED through a 330 Ohm resistor to ground.
 
 import RPi.GPIO as GPIO
-# import pigpio
+import pigpio
 
-# pi = pigpio.pi()
+pi = pigpio.pi()
 
 # Any reading over this value will turn on the output LED
-THRESHOLD = 1800
+THRESHOLD = 30
 
 # Stop counting after this value (we can assume it is total darkness)
-MAX_T = 20000
+MAX_T = 1000
 
 # Pin definitions
 P_JNCT_PIN = 21  # P junction of sensing LED
 N_JNCT_PIN = 20  # N junction of sensing LED
 OUT_LED_PIN = 18  # Output LED pin (P junction pin)
-
-# Global variables
-# global status
 
 
 def setup():
@@ -60,9 +57,9 @@ def loop():
     # Print out the raw discharge time
     print(sen_time)
 
-    # If the light is  below a certain level (discharge time is over
-    # the threshold), turn on the output LED
-    if sen_time > THRESHOLD:
+    # If the light is above a certain level (discharge time
+    # is under the threshold), turn on the output LED
+    if sen_time < THRESHOLD:
         GPIO.output(OUT_LED_PIN, GPIO.HIGH)
     else:
         GPIO.output(OUT_LED_PIN, GPIO.LOW)
@@ -75,42 +72,23 @@ def readLED():
     global sen_time  # Time it takes to discharge LED
     sen_time = 0  # Reset global LED discharge time
 
-    # status = ""
-
     # Apply reverse voltage to charge the sensing LED's capacitance
     GPIO.setup(N_JNCT_PIN, GPIO.OUT)
     GPIO.output(N_JNCT_PIN, GPIO.HIGH)
 
     # Isolate N junction and turn off pull-up resistor
-    GPIO.output(N_JNCT_PIN, GPIO.LOW)
+    # GPIO.output(N_JNCT_PIN, GPIO.LOW)
     GPIO.setup(N_JNCT_PIN, GPIO.IN)
 
-    # try:
-    #     with open("/sys/class/gpio/gpio16/value") as pin:
-    #         status = pin.read(1)
-    # except:
-    #     print "Remember to export the pin first!"
-    #     status = "Unknown"
-
     # Count how long it takes for the LED to discharge
-    x = 0
-    while x == 0:
-        if GPIO.input(N_JNCT_PIN) == 1:
-            for y in range(0, MAX_T):
-                if GPIO.input(N_JNCT_PIN) == 0:
-                    x = 1
-                    sen_time = t
-                    break
-                t += 1
-                sen_time = t
-                # print sen_time
+    for y in range(0, MAX_T):
         # if GPIO.input(N_JNCT_PIN) == 0:
-        # if int(status) == 0:
-        # if pi.read(N_JNCT_PIN) == 0:
-            # break;
-            # print status
-        # print GPIO.input(N_JNCT_PIN)
-        # print t
+        if pi.read(N_JNCT_PIN) == 0:
+            x = 1
+            break
+        t += 1
+        sen_time = t
+        # print sen_time
     return
 
 
