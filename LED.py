@@ -22,15 +22,15 @@
 # http://abyz.me.uk/rpi/pigpio/index.html
 
 import RPi.GPIO as GPIO
-import pigpio
+#import pigpio
 
-pi = pigpio.pi()
+#pi = pigpio.pi()
 
-# Any reading over this value will turn on the output LED
-THRESHOLD = 30
+# Any reading under this value will turn on the output LED
+THRESHOLD = 1000
 
 # Stop counting after this value (we can assume it is total darkness)
-MAX_T = 1000
+MAX_T = 20000
 
 # Pin definitions
 P_JNCT_PIN = 21  # P junction of sensing LED
@@ -85,8 +85,8 @@ def readLED():
 
     # Count how long it takes for the LED to discharge
     for y in range(0, MAX_T):
-        # if GPIO.input(N_JNCT_PIN) == 0:
-        if pi.read(N_JNCT_PIN) == 0:
+        if GPIO.input(N_JNCT_PIN) == 0:
+        # if pi.read(N_JNCT_PIN) == 0:
             x = 1
             break
         t += 1
