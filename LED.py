@@ -22,9 +22,9 @@
 # http://abyz.me.uk/rpi/pigpio/index.html
 
 import RPi.GPIO as GPIO
-#import pigpio
+# import pigpio
 
-#pi = pigpio.pi()
+# pi = pigpio.pi()
 
 # Any reading under this value will turn on the output LED
 THRESHOLD = 1000
@@ -84,10 +84,9 @@ def readLED():
     GPIO.setup(N_JNCT_PIN, GPIO.IN)
 
     # Count how long it takes for the LED to discharge
-    for y in range(0, MAX_T):
+    for x in range(0, MAX_T):
         if GPIO.input(N_JNCT_PIN) == 0:
-        # if pi.read(N_JNCT_PIN) == 0:
-            x = 1
+            # if pi.read(N_JNCT_PIN) == 0:
             break
         t += 1
         sen_time = t
