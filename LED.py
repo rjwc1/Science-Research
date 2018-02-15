@@ -22,15 +22,16 @@
 # http://abyz.me.uk/rpi/pigpio/index.html
 
 import RPi.GPIO as GPIO
+import time
 # import pigpio
 
 # pi = pigpio.pi()
 
 # Any reading under this value will turn on the output LED
-THRESHOLD = 1000
+THRESHOLD = 5000
 
 # Stop counting after this value (we can assume it is total darkness)
-MAX_T = 20000
+MAX_T = 5001
 
 # Pin definitions
 P_JNCT_PIN = 21  # P junction of sensing LED
@@ -60,16 +61,16 @@ def loop():
     # Read the amount of light falling on the LED
     readLED()
 
-    # Print out the raw discharge time
-    print(sen_time)
+    # Return the raw discharge time
+    return(sen_time)
 
     # If the light is above a certain level (discharge time
     # is under the threshold), turn on the output LED
-    if sen_time < THRESHOLD:
-        GPIO.output(OUT_LED_PIN, GPIO.HIGH)
-    else:
-        GPIO.output(OUT_LED_PIN, GPIO.LOW)
-    return
+    # if sen_time < THRESHOLD:
+    #     GPIO.output(OUT_LED_PIN, GPIO.HIGH)
+    # else:
+    #     GPIO.output(OUT_LED_PIN, GPIO.LOW)
+    # return
 
 
 def readLED():
@@ -97,17 +98,31 @@ def readLED():
     return
 
 
-def receive():
-    list.append(0)
-    while x == 1:
+def receivebinary():
+    timestep = .5
+    x = 1
+    while loop() > THRESHOLD:
+        pass
+    while x < 30:
+        print(loop())
         if loop() < THRESHOLD:
             list.append(1)
-            while loop() < THRESHOLD:
-                pass
+        else:    
             list.append(0)
+        x += 1
+        time.sleep(timestep)
+    print(list[:])
+
+
+def receivemorse():
+    while loop() > THRESHOLD:
+        pass
+    x = 1
+    while x < 30:
+        if loop() < THRESHOLD:
+            list.append(1)
+        
 
 
 setup()
-x = 1
-while x > 0:
-    loop()
+receive()
