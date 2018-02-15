@@ -31,7 +31,7 @@ import time
 THRESHOLD = 5000
 
 # Stop counting after this value (we can assume it is total darkness)
-MAX_T = 5001
+MAX_T = 6000
 
 # Pin definitions
 P_JNCT_PIN = 21  # P junction of sensing LED
@@ -122,19 +122,44 @@ def receivemorse():
     key_down_length = 0
     key_up_time = 0
 
-    while True:
+    space_time = 1
+    end_time = 3
+    dot_length = 0.5
+
+    # Wait for input
+    while loop() > THRESHOLD:
+        pass
+
+    x = True
+    while x:
         # record the time when the key went down
-        while loop() > THRESHOLD:
-            pass
+        init_time = time.time()
+        while True:
+            wait_time = time.time()
+            if loop() < THRESHOLD:
+                if (wait_time - init_time) > space_time:
+                    list.append(" ")
+                    break
+                else:
+                    break
         key_down_time = time.time()
         while loop() < THRESHOLD:
-            pass
+            wait_time = time.time()
+            if (wait_time - key_down_time) > end_time:
+                x = False
+                key_down_time = wait_time - key_down_time
+                break
         # record the time when the key was released
         key_up_time = time.time()
         # get the length of time it was held down for
-        key_down_time = key_up_time - key_down_time
-        list.append(DASH if key_down_length > 0.15 else DOT)
-
+        key_down_length = key_up_time - key_down_time
+        print(key_down_length)
+        if key_down_length > dot_length and key_down_length < end_time:
+            list.append(DASH)
+        elif key_down_length < dot_length:
+            list.append(DOT)
+        
 
 setup()
 receivemorse()
+print(list[:])
