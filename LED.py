@@ -37,6 +37,9 @@ P_JNCT_PIN = 21  # P junction of sensing LED
 N_JNCT_PIN = 20  # N junction of sensing LED
 OUT_LED_PIN = 18  # Output LED pin (P junction pin)
 
+# List
+list = []
+
 
 def setup():
     # Set up GPIO
@@ -92,6 +95,16 @@ def readLED():
         sen_time = t
         # print sen_time
     return
+
+
+def receive():
+    list.append(0)
+    while x == 1:
+        if loop() < THRESHOLD:
+            list.append(1)
+            while loop() < THRESHOLD:
+                pass
+            list.append(0)
 
 
 setup()
