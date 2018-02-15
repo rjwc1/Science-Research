@@ -107,7 +107,7 @@ def receivebinary():
         print(loop())
         if loop() < THRESHOLD:
             list.append(1)
-        else:    
+        else:
             list.append(0)
         x += 1
         time.sleep(timestep)
@@ -115,14 +115,26 @@ def receivebinary():
 
 
 def receivemorse():
-    while loop() > THRESHOLD:
-        pass
-    x = 1
-    while x < 30:
-        if loop() < THRESHOLD:
-            list.append(1)
-        
+    DOT = "."
+    DASH = "-"
+
+    key_down_time = 0
+    key_down_length = 0
+    key_up_time = 0
+
+    while True:
+        # record the time when the key went down
+        while loop() > THRESHOLD:
+            pass
+        key_down_time = time.time()
+        while loop() < THRESHOLD:
+            pass
+        # record the time when the key was released
+        key_up_time = time.time()
+        # get the length of time it was held down for
+        key_down_time = key_up_time - key_down_time
+        list.append(DASH if key_down_length > 0.15 else DOT)
 
 
 setup()
-receive()
+receivemorse()
