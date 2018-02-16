@@ -133,9 +133,11 @@ def receivemorse():
     x = True
     while x:
         init_time = time.time()
+        y = True
         while loop() > THRESHOLD:
-            if time.time() - init_time > space_length:
+            if time.time() - init_time > space_length and y:
                 list.append(" ")
+                y = False
         # record the time when the key went down
         key_down_time = time.time()
         while loop() < THRESHOLD:
@@ -217,8 +219,25 @@ def decipher(message):
     return map(lambda it: it[0], row)
 
 
+def returnmsg(message):
+    for x in message:
+        if x == ".":
+            GPIO.output(OUT_LED_PIN, GPIO.HIGH)
+            time.sleep(.1)
+            GPIO.output(OUT_LED_PIN, GPIO.LOW)
+        elif x == "-":
+            GPIO.output(OUT_LED_PIN, GPIO.HIGH)
+            time.sleep(.3)
+            GPIO.output(OUT_LED_PIN, GPIO.LOW)
+        elif x == " ":
+            time.sleep(.8)
+        time.sleep(.3)
+
 setup()
 receivemorse()
 print(list[:])
-print(decipher("..."))
-
+message = ""
+for x in list:
+    message = message + x
+print(decode(message))
+returnmsg(message)
