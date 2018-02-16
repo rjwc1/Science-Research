@@ -122,7 +122,7 @@ def receivemorse():
     key_down_length = 0
     key_up_time = 0
 
-    end_time = 3
+    end_time = 1.5
     dot_length = 0.5
 
     # Wait for input
@@ -139,7 +139,6 @@ def receivemorse():
             wait_time = time.time()
             if (wait_time - key_down_time) > end_time:
                 x = False
-                key_down_time = wait_time - key_down_time
                 break
         # record the time when the key was released
         key_up_time = time.time()
@@ -218,3 +217,5 @@ def decipher(message):
 setup()
 receivemorse()
 print(list[:])
+print(decipher("..."))
+
