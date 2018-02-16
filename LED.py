@@ -124,6 +124,7 @@ def receivemorse():
 
     end_time = 1.5
     dot_length = 0.5
+    space_length = .25
 
     # Wait for input
     while loop() > THRESHOLD:
@@ -131,8 +132,10 @@ def receivemorse():
 
     x = True
     while x:
+        init_time = time.time()
         while loop() > THRESHOLD:
-            pass
+            if time.time() - init_time > space_length:
+                list.append(" ")
         # record the time when the key went down
         key_down_time = time.time()
         while loop() < THRESHOLD:
