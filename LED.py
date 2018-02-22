@@ -3,7 +3,7 @@
 # Date: February 11, 2018
 #
 # Description:
-#  Demonstration of how to use an LED as a light sensors. Shine
+#  Demonstration of how to use an LED as a light sensor. Shine
 #  light on LED plugged into pin 20/21 to light up the output LED
 #  plugged into pin 18. Note that you might have to change the
 #  THRESHOLD parameter.
@@ -18,8 +18,6 @@
 #  You will also need to connect the - sides of the output
 #  LED through a 330 Ohm resistor to ground.
 #
-# Note: must have pigpio installed
-# http://abyz.me.uk/rpi/pigpio/index.html
 
 import RPi.GPIO as GPIO
 import time
@@ -47,7 +45,7 @@ def setup():
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
 
-    # Set P juction pin to output low (GND)
+    # Set P junction pin to output low (GND)
     GPIO.setup(P_JNCT_PIN, GPIO.OUT)
     GPIO.output(P_JNCT_PIN, GPIO.LOW)
 
@@ -232,6 +230,7 @@ def returnmsg(message):
         elif x == " ":
             time.sleep(.8)
         time.sleep(.3)
+
 
 setup()
 receivemorse()
